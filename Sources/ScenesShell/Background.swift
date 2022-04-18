@@ -7,8 +7,10 @@ import Igis
 
 
 class Background : RenderableEntity {
-
-      init() {
+    
+    
+    init() {
+        
           // Using a meaningful name can be helpful for debugging
           super.init(name:"Background")
       }
@@ -16,6 +18,17 @@ class Background : RenderableEntity {
       // Returns center of a particular
       func returnCenter(rect: Rect) -> Point {           
           return Point(x: (rect.size.width / 2) + rect.topLeft.x, y: (rect.size.height / 2) + rect.topLeft.y)          
+      }
+
+      func doesContain(rect: Rect, point: Point) -> Bool {
+          let bottomRight = rect.topLeft + Point(x: rect.size.width, y: rect.size.height)
+
+          if point.x > rect.topLeft.x && point.x < bottomRight.x {
+              if point.y > rect.topLeft.y && point.y < bottomRight.y {
+                  return true
+              }
+          }
+          return false
       }
 
       // Simple function that renders a rectangle
@@ -79,7 +92,7 @@ class Background : RenderableEntity {
           canvas.render(button)
 
           if text != nil { // include text that is centered on the button
-              var textLocation = returnCenter(rect: rect)
+              var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5) // Comic Sans is top heavy
               if centered { // Offset if the button is centered
                   textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
               }
@@ -88,7 +101,7 @@ class Background : RenderableEntity {
               let fillStyle = FillStyle(color: Color(.white))
               renderableText.font = "30pt Comic Sans MS"
               renderableText.alignment = .center
-              renderableText.baseline = .bottom
+              renderableText.baseline = .middle
               canvas.render(fillStyle, renderableText)
           }          
       }
@@ -101,10 +114,20 @@ class Background : RenderableEntity {
 
               let canvasCenter = returnCenter(rect: background)
               
-              let wordleButton = Rect(topLeft: canvasCenter, size: Size(width: 300, height: 50))
-              let fillStyle = FillStyle(color: Color(.deepskyblue))
-              canvas.render(fillStyle)
+              let wordleButton = Rect(topLeft: Point(x: canvasCenter.x, y: 375), size: Size(width: 300, height: 50))
+              let wordleFill = FillStyle(color: Color(.deepskyblue))
+              canvas.render(wordleFill)
               renderButton(to: canvas, rect: wordleButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Wordle")
+
+              let crosswordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
+              let crosswordFill = FillStyle(color: Color(.mediumaquamarine))
+              canvas.render(crosswordFill)
+              renderButton(to: canvas, rect: crosswordButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Crossword")
+
+              let wordsearchButton = Rect(topLeft: Point(x: canvasCenter.x, y: 450), size: Size(width: 300, height: 50))
+              let wordsearchFill = FillStyle(color: Color(.lightseagreen))
+              canvas.render(wordsearchFill)
+              renderButton(to: canvas, rect: wordsearchButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Wordsearch")
           }
-          }          
+      }
 }
