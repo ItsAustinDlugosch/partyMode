@@ -7,7 +7,7 @@ import Igis
    */
 
 
-class Background : RenderableEntity, EntityMouseClickHandler {
+class WordleBackground : RenderableEntity, EntityMouseClickHandler {
 
     var buttons : [Rect?]
     var rect : Rect?
