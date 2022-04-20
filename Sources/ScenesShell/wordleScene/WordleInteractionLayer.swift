@@ -6,7 +6,7 @@ import Scenes
    */
 
 
-class InteractionLayer : Layer {
+class WordleInteractionLayer : Layer {
 
       init() {
           // Using a meaningful name can be helpful for debugging

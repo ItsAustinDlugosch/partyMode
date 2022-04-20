@@ -6,11 +6,11 @@ import Scenes
    */
 
 
-class ForegroundLayer : Layer {
+class WordleForegroundLayer : Layer {
 
       init() {
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"Foreground")
+          super.init(name:"WordleForeground")
 
           // We insert our RenderableEntities in the constructor
 

@@ -6,14 +6,14 @@ import Scenes
    */
 
 
-class BackgroundLayer : Layer {
-      let background = Background()
+class CrosswordBackgroundLayer : Layer {
+      let crosswordBackground = CrosswordBackground()
 
       init() {
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"Background")
+          super.init(name:"CrosswordBackground")
 
           // We insert our RenderableEntities in the constructor
-          insert(entity:background, at:.back)
+          insert(entity:crosswordBackground, at:.back)
       }
   }

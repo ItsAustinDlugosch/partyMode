@@ -6,14 +6,14 @@ import Scenes
    */
 
 
-class BackgroundLayer : Layer {
-      let background = Background()
+class WordsearchBackgroundLayer : Layer {
+      let wordsearchBackground = WordsearchBackground()
 
       init() {
           // Using a meaningful name can be helpful for debugging
           super.init(name:"Background")
 
           // We insert our RenderableEntities in the constructor
-          insert(entity:background, at:.back)
+          insert(entity:wordsearchBackground, at:.back)
       }
   }

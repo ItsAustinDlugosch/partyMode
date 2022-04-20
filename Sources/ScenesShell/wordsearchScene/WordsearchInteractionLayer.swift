@@ -6,11 +6,11 @@ import Scenes
    */
 
 
-class InteractionLayer : Layer {
+class WordsearchInteractionLayer : Layer {
 
       init() {
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"Interaction")
+          super.init(name:"WordsearchInteraction")
 
           // We insert our RenderableEntities in the constructor
 

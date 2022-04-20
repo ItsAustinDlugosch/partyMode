@@ -3,7 +3,7 @@ import Scenes
 class WordleScene : Scene {
 
     let backgroundLayer = WordleBackgroundLayer()
-    let interactionLayer = WordleInteractionLater()
+    let interactionLayer = WordleInteractionLayer()
     let foregroundLayer = WordleForegroundLayer()
 
     init() {

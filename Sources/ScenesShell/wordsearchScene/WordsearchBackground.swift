@@ -6,12 +6,12 @@ import Igis
    */
 
 
-class CrosswordBackground : RenderableEntity {
+class WordsearchBackground : RenderableEntity {
     
     
     init() {
         
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"Background")
+          super.init(name:"WordsearchBackground")
       }
 }

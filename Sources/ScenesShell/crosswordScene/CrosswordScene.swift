@@ -1,11 +1,11 @@
 import Scenes
 
 
-class crosswordScene: Scene {
+class CrosswordScene: Scene {
 
     let backgroundLayer = CrosswordBackgroundLayer()
     let interactionLayer = CrosswordInteractionLayer()
-    let foregroundLayer = CrosswordForeroundLayer()
+    let foregroundLayer = CrosswordForegroundLayer()
 
     init() {
         super.init(name: "Crossword")
