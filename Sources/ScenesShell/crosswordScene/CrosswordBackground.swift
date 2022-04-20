@@ -94,7 +94,7 @@ class Background : RenderableEntity {
           canvas.render(button)
 
           if text != nil { // include text that is centered on the button
-              var textLocation = returnCenter(rect: rect)
+              var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5) // Comic Sans is top heavy
               if centered { // Offset if the button is centered
                   textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
               }
