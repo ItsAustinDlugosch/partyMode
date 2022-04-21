@@ -12,7 +12,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
     var rect : Rect?
     
     init() {        
-        buttons = [nil] // ask how to make this better
+        buttons = [nil] // ask how to make this better **
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Background")
     }
@@ -158,16 +158,22 @@ class Background : RenderableEntity, EntityMouseClickHandler {
           }
 
           if gameNumber != nil {
-              switch gameNumber {
+              let nextScene: Scene
+              switch gameNumber { // Switch scenes to each game scene
               case 0:
-                  print("Crossword")
+                  nextScene = CrosswordScene()                  
               case 1:
-                  print("Wordle")
+                  nextScene = WordleScene()                  
               case 2:
-                  print("Wordsearch")
+                  nextScene = WordsearchScene()                  
               default:
                   fatalError("Button does not exist")
               }
+              guard let director = self.director as? ShellDirector else {
+                  fatalError("ShellDirector required for scene transition")
+              }
+              director.enqueueScene(scene: nextScene)
+              director.transitionToNextScene()
           }
           
       }
