@@ -7,8 +7,11 @@ import Scenes
    */
 
 
+
+
 class BackgroundLayer : Layer {
-      let background = Background()
+    let background = Background()
+    let letterA = Letter(character: "a", start: Point(x: 500, y: 400), scale: 30)
 
       init() {
           // Using a meaningful name can be helpful for debugging
@@ -16,5 +19,6 @@ class BackgroundLayer : Layer {
 
           // We insert our RenderableEntities in the constructor
           insert(entity:background, at:.back)
+          insert(entity:letterA, at:.front)
       }
   }

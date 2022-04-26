@@ -102,10 +102,16 @@ class WordleBackground : RenderableEntity, EntityMouseClickHandler {
             let spacing = 8
             // Multiply width of each box by number of columns, and spacing by number of columns minus one, similar for height
             let wordleGridSize = Size(width: (wordleAnswerBoxSize.width * 5) + (spacing * 4), height: (wordleAnswerBoxSize.height * 6) + (spacing * 5))
-            let wordleGridRect = returnCenteredRect(rect: Rect(size: wordleGridSize), center: midpoint)            
+            let wordleGridCenterPoint = midpoint - Point(x: 0, y: canvasSize.height / 6)
+            let wordleGridRect = returnCenteredRect(rect: Rect(size: wordleGridSize), center: wordleGridCenterPoint)            
             let strokeStyle = StrokeStyle(color: Color(.darkgray))
             let lineWidth = LineWidth(width: 2)
             renderGrid(to: canvas, rowCount: 6, columnCount: 5, spacing: 8, rect: Rect(topLeft: wordleGridRect.topLeft, size: wordleAnswerBoxSize), fillMode: .stroke, strokeStyle: strokeStyle, lineWidth: lineWidth)
+
+            let topLine = Path(fillMode: .stroke)
+            topLine.moveTo(Point(x:0, y:50))
+            topLine.lineTo(Point(x:canvasSize.width, y: 50))
+            canvas.render(topLine)
         }
         
         dispatcher.registerEntityMouseClickHandler(handler:self)

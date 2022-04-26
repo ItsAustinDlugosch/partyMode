@@ -53,7 +53,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
       }
 
       // Function that adds rounded corners to a rectangle
-      func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, text: String? = nil) {
+      func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
           // New width and height accounting for rounded corners
           let width = rect.size.width - (2 * radius) 
           let height = rect.size.height - (2 * radius)
@@ -97,18 +97,18 @@ class Background : RenderableEntity, EntityMouseClickHandler {
           
           canvas.render(button)
 
-          if text != nil { // include text that is centered on the button
+         if title != nil { // include text that is centered on the button
               var textLocation = returnCenter(rect: rect)
               if centered { // Offset if the button is centered
                   textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
               }
               
-              let renderableText = Text(location: textLocation, text: text!)
+              let text = Text(location: textLocation, text: title!)
               let fillStyle = FillStyle(color: Color(.white))
-              renderableText.font = "30pt Comic Sans MS"
-              renderableText.alignment = .center
-              renderableText.baseline = .middle
-              canvas.render(fillStyle, renderableText)
+              text.font = "30pt Comic Sans MS"
+              text.alignment = .center
+              text.baseline = .middle
+              canvas.render(fillStyle, text)
           }          
       }
       
@@ -123,14 +123,14 @@ class Background : RenderableEntity, EntityMouseClickHandler {
               let crosswordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
               let crosswordFill = FillStyle(color: Color(.mediumaquamarine))
               canvas.render(crosswordFill)
-              renderButton(to: canvas, rect: crosswordButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Crossword")
+              renderButton(to: canvas, rect: crosswordButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Crossword")
               // Append the centered rect
               buttons.append(returnCenteredRect(rect: crosswordButton, center: crosswordButton.topLeft))
               
               let wordleButton = Rect(topLeft: Point(x: canvasCenter.x, y: 375), size: Size(width: 300, height: 50))
               let wordleFill = FillStyle(color: Color(.deepskyblue))
               canvas.render(wordleFill)
-              renderButton(to: canvas, rect: wordleButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Wordle")
+              renderButton(to: canvas, rect: wordleButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Wordle")
               // Append the centered rect
               buttons.append(returnCenteredRect(rect: wordleButton, center: wordleButton.topLeft))
 
@@ -138,9 +138,9 @@ class Background : RenderableEntity, EntityMouseClickHandler {
               let wordsearchButton = Rect(topLeft: Point(x: canvasCenter.x, y: 450), size: Size(width: 300, height: 50))
               let wordsearchFill = FillStyle(color: Color(.lightseagreen))
               canvas.render(wordsearchFill)
-              renderButton(to: canvas, rect: wordsearchButton, fillMode: .fillAndStroke, radius: 20, centered: true, text: "Wordsearch")
+              renderButton(to: canvas, rect: wordsearchButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Wordsearch")
               // Append the centered rect
-              buttons.append(returnCenteredRect(rect: wordsearchButton, center: wordsearchButton.topLeft))                            
+              buttons.append(returnCenteredRect(rect: wordsearchButton, center: wordsearchButton.topLeft))
 
               rect = background
           }
