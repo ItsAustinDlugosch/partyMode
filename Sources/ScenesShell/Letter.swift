@@ -66,7 +66,25 @@ class Letter :  RenderableEntity {
 
     }
     func drawE(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top Left of E
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 3, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -2, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -3, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -5))
+
+        path.lineTo(startingPoint)
     }
     func drawF(path: Path, point: Point, scale: Int) {
         let startingPoint = point
@@ -106,7 +124,25 @@ class Letter :  RenderableEntity {
 
     }
     func drawM(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top Left of M
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 195)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 3))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -5))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 15)
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 165)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 5))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -3))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 345)
+
+        path.lineTo(startingPoint)
     }
     func drawN(path: Path, point: Point, scale: Int) {
 
@@ -130,7 +166,25 @@ class Letter :  RenderableEntity {
 
     }
     func drawT(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top Left of M
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 195)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 3))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -5))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 15)
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 165)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 5))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -3))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 345)
+
+        path.lineTo(startingPoint)
     }
     func drawU(path: Path, point: Point, scale: Int) {
 
