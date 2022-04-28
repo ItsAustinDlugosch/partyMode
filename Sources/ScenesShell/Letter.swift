@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import Foundation
 import Scenes
 import Igis
@@ -69,7 +64,16 @@ class Letter :  RenderableEntity {
 
     }
     func drawD(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top Left of D
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        currentPoint -= Point(x: 0, y: -3 * scale)
+        path.moveTo(currentPoint + Point(x: scale * 2, y:0)) //Move to start angle of arc
+        path.arc(center: currentPoint, radius: scale * 2, startAngle:, endAngle:)
+        
     }
     func drawE(path: Path, point: Point, scale: Int) {
         // Start of Development = Top Left of E
@@ -138,7 +142,14 @@ class Letter :  RenderableEntity {
 
     }
     func drawO(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top of O
+        let startingPoint = point        
 
+        path.arc(center: startingPoint, radius: scale * 2)
+        path.moveTo(startingPoint + Point(x: scale * 3, y: 0))
+        path.arc(center: startingPoint, radius: scale * 3, antiClockwise: true)
+        
+        path.moveTo(startingPoint)
     }
     func drawP(path: Path, point: Point, scale: Int) {
 
