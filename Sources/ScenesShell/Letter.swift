@@ -69,8 +69,24 @@ class Letter :  RenderableEntity {
 
     }
     func drawF(path: Path, point: Point, scale: Int) {
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
+
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 3, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -2, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 2))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+
+        path.lineTo(startingPoint)
 
     }
+    
     func drawG(path: Path, point: Point, scale: Int) {
 
     }
@@ -99,7 +115,10 @@ class Letter :  RenderableEntity {
 
     }
     func drawP(path: Path, point: Point, scale: Int) {
+        let outerPath = Path(fillMode: .stroke)
+        outerPath.arc(center: Point(x: 600, y: 200), radius: 100, startAngle: 1.2 * Double.pi, endAngle: 1.2 * Double.pi)
 
+        canvas.render(outerPath)
     }
     func drawQ(path: Path, point: Point, scale: Int) {
 
@@ -126,8 +145,23 @@ class Letter :  RenderableEntity {
 
     }
     func drawY(path: Path, point: Point, scale: Int) {
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -4))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9, angle: 200)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 20)
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 160)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
+
+        path.lineTo(startingPoint)
+        
     }
+    
     func drawZ(path: Path, point: Point, scale: Int) {
 
     }
