@@ -17,7 +17,7 @@ class Letter :  RenderableEntity {
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Letter")        
     }
-
+    
     func calculatePoint(point: Point, length: Int, angle: Double) -> Point {
         let newPoint : Point
         let radianAngle : CGFloat = angle * Double.pi / 180.0
@@ -26,7 +26,7 @@ class Letter :  RenderableEntity {
         newPoint = point + Point(x: x, y: y)
         return newPoint
     }
-
+    
     func lineToDiagonal(path: Path, currentPoint: inout Point, length: Int, angle: Double) {
         currentPoint = calculatePoint(point: currentPoint, length: length, angle: angle)
         path.lineTo(currentPoint)
@@ -63,7 +63,16 @@ class Letter :  RenderableEntity {
 
     }
     func drawD(path: Path, point: Point, scale: Int) {
+        // Start of Development = Top Left of D
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
 
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        currentPoint -= Point(x: 0, y: -3 * scale)
+        path.moveTo(currentPoint + Point(x: scale * 2, y:0)) //Move to start angle of arc
+        path.arc(center: currentPoint, radius: scale * 2, startAngle: 1.2, endAngle: 1.2)
+        
     }
     func drawE(path: Path, point: Point, scale: Int) {
         // Start of Development = Top Left of E
@@ -149,12 +158,28 @@ class Letter :  RenderableEntity {
     }
     func drawO(path: Path, point: Point, scale: Int) {
         
+        
+        // Start of Development = Top of O
+        let startingPoint = point        
+        
+        path.arc(center: startingPoint, radius: scale * 2)
+        path.moveTo(startingPoint + Point(x: scale * 3, y: 0))
+        path.arc(center: startingPoint, radius: scale * 3, antiClockwise: true)
+        
+        path.moveTo(startingPoint)
     }
     func drawP(path: Path, point: Point, scale: Int) {
-        let outerPath = Path(fillMode: .stroke)
-        outerPath.arc(center: Point(x: 600, y: 200), radius: 100, startAngle: 1.2 * Double.pi, endAngle: 1.2 * Double.pi)
+        let startingPoint = point
+        var currentPoint = point
+        path.moveTo(currentPoint)
         
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 6))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -2))
+        path.arc(center: currentPoint.y -= currentPoint.y / 2, radius: scale * 2, startAngle: 1.2, endAngle: 1.2)
     }
+    
     func drawQ(path: Path, point: Point, scale: Int) {
         
     }
