@@ -8,11 +8,10 @@ import Igis
 
 class Background : RenderableEntity, EntityMouseClickHandler {
 
-    var buttons : [Rect?]
+    var buttons = [Rect?]()
     var rect : Rect?
     
-    init() {        
-        buttons = [nil] // ask how to make this better **
+    init() {
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Background")
     }
@@ -34,7 +33,8 @@ class Background : RenderableEntity, EntityMouseClickHandler {
       }
 
       func returnCenteredRect(rect: Rect, center: Point) -> Rect {
-          let centeredRect = Rect(topLeft: rect.topLeft - Point(x: rect.size.width / 2, y: rect.size.height / 2), size: rect.size)
+          let topLeft = Point(x: center.x - rect.size.width / 2, y: center.y - rect.size.height / 2)
+          let centeredRect = Rect(topLeft: topLeft, size: rect.size)
           return centeredRect
       }
 
@@ -98,7 +98,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
           canvas.render(button)
 
          if title != nil { // include text that is centered on the button
-              var textLocation = returnCenter(rect: rect)
+             var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
               if centered { // Offset if the button is centered
                   textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
               }
@@ -117,30 +117,28 @@ class Background : RenderableEntity, EntityMouseClickHandler {
           if let canvasSize = canvas.canvasSize {
               let background = Rect(size: canvasSize)
               renderRectangle(to: canvas, rect: background, fillMode: .fill, fillStyle: FillStyle(color: Color(.lightcyan)))
-              buttons.remove(at: 0) // THIS IS BAD ASK MR. BEN
               let canvasCenter = returnCenter(rect: background)
 
               let crosswordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
-              let crosswordFill = FillStyle(color: Color(.mediumaquamarine))
-              canvas.render(crosswordFill)
-              renderButton(to: canvas, rect: crosswordButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Crossword")
-              // Append the centered rect
-              buttons.append(returnCenteredRect(rect: crosswordButton, center: crosswordButton.topLeft))
-              
               let wordleButton = Rect(topLeft: Point(x: canvasCenter.x, y: 375), size: Size(width: 300, height: 50))
-              let wordleFill = FillStyle(color: Color(.deepskyblue))
-              canvas.render(wordleFill)
-              renderButton(to: canvas, rect: wordleButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Wordle")
-              // Append the centered rect
-              buttons.append(returnCenteredRect(rect: wordleButton, center: wordleButton.topLeft))
-
-
               let wordsearchButton = Rect(topLeft: Point(x: canvasCenter.x, y: 450), size: Size(width: 300, height: 50))
-              let wordsearchFill = FillStyle(color: Color(.lightseagreen))
-              canvas.render(wordsearchFill)
-              renderButton(to: canvas, rect: wordsearchButton, fillMode: .fillAndStroke, radius: 20, centered: true, title: "Wordsearch")
-              // Append the centered rect
-              buttons.append(returnCenteredRect(rect: wordsearchButton, center: wordsearchButton.topLeft))
+              buttons.append(crosswordButton)
+              buttons.append(wordleButton)
+              buttons.append(wordsearchButton)
+              
+              let buttonColors : [Color.Name] = [.mediumaquamarine, .deepskyblue, .lightseagreen]
+              let buttonTitles : [String] = ["Crossword", "Wordle", "Wordsearch"]
+
+              precondition(buttons.count == buttonColors.count && buttons.count == buttonTitles.count && !buttons.contains(nil), "Number of buttons does not equal number of colors.")
+              for i in 0 ..< buttons.count {
+                  let canvasCenteredButton = returnCenteredRect(rect: buttons[i]!, center: Point(x: canvasCenter.x, y: buttons[i]!.topLeft.y + buttons[i]!.size.height / 2))
+                  buttons[i] = canvasCenteredButton
+                  let fillStyle = FillStyle(color:Color(buttonColors[i]))
+                  canvas.render(fillStyle)
+                  renderButton(to: canvas, rect: buttons[i]!, fillMode: .fillAndStroke, radius: 20, centered: false, title: buttonTitles[i])
+              }
+
+              // Fix**
 
               rect = background
           }
