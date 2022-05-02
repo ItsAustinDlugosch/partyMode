@@ -10,15 +10,16 @@ import Scenes
 
 
 class BackgroundLayer : Layer {
-    let background = Background()
-    let letterA = Letter(character: "a", start: Point(x: 500, y: 400), scale: 30)
+    // Insert Rects for Buttons, *** rect.topLeft.x = 0 then changed to canvasCenter within the Background       
 
-      init() {
-          // Using a meaningful name can be helpful for debugging
+    init() {
+        let background = Background()
+
+        // Using a meaningful name can be helpful for debugging
           super.init(name:"Background")
 
           // We insert our RenderableEntities in the constructor
           insert(entity:background, at:.back)
-          insert(entity:letterA, at:.front)
-      }
-  }
+
+    }
+}

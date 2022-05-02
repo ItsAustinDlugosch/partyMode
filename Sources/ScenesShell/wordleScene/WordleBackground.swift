@@ -6,9 +6,13 @@ import Igis
    */
 
 
-class WordleBackground : RenderableEntity, EntityMouseClickHandler {
+class WordleBackground : RenderableEntity {
+
+    var buttons = [Rect?]()
+    var rect : Rect?
     
-    init() {        
+    init() {
+
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Background")
     }
@@ -86,43 +90,84 @@ class WordleBackground : RenderableEntity, EntityMouseClickHandler {
         
     }
 
+    // Function that adds rounded corners to a rectangle
+      func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
+          // New width and height accounting for rounded corners
+          let width = rect.size.width - (2 * radius) 
+          let height = rect.size.height - (2 * radius)
+          
+          let button = Path(fillMode: fillMode)
+
+          // Start the path at the topLeft of the original rect, but move right by the radius
+          var currentPoint = Point(x: rect.topLeft.x + radius, y: rect.topLeft.y)
+          if centered {
+              currentPoint -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
+          }
+          
+          button.moveTo(currentPoint)
+          
+          currentPoint.x += width
+          button.lineTo(currentPoint)
+          
+          currentPoint.y += radius // Move down to center arc
+          button.arc(center: currentPoint, radius: radius, startAngle: 1.5 * Double.pi, endAngle: 2 * Double.pi)
+          currentPoint.x += radius
+          
+          currentPoint.y += height
+          button.lineTo(currentPoint)
+
+          currentPoint.x -= radius // Move left to center arc
+          button.arc(center: currentPoint, radius: radius, startAngle: 2 * Double.pi, endAngle: 0.5 * Double.pi)
+          currentPoint.y += radius
+
+          currentPoint.x -= width
+          button.lineTo(currentPoint)
+
+          currentPoint.y -= radius
+          button.arc(center: currentPoint, radius: radius, startAngle: 0.5 * Double.pi, endAngle: Double.pi)
+          currentPoint.x -= radius
+
+          currentPoint.y -= height
+          button.lineTo(currentPoint)
+
+          currentPoint.x += radius
+          button.arc(center: currentPoint, radius: radius, startAngle:  Double.pi, endAngle: 1.5 * Double.pi)         
+          
+          canvas.render(FillStyle(color: Color(.lightgray)), button)
+
+         if title != nil { // include text that is centered on the button
+             var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
+              if centered { // Offset if the button is centered
+                  textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
+              }
+              
+              let text = Text(location: textLocation, text: title!)
+              let fillStyle = FillStyle(color: Color(.black))
+              text.font = "15pt Helvetica"
+              text.alignment = .center
+              text.baseline = .middle
+              canvas.render(fillStyle, text)
+          }          
+      }
+
+      func renderButtonRow(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, titles: [String?] = [nil], columnCount: Int, spacing: Int) {
+          var buttonNames = titles
+          while buttonNames.count != columnCount {
+              buttonNames.append(nil)
+          }
+          var currentPoint = rect.topLeft
+          for i in 0 ..< columnCount {
+              let currentRect = Rect(topLeft: currentPoint, size: rect.size)
+              renderButton(to: canvas, rect: currentRect, fillMode: fillMode, radius: radius, centered: centered, title: buttonNames[i])
+              currentPoint.x += rect.width + spacing
+              buttons.append(currentRect)
+          }
+      }
 
     // Override Functions:
 
     override func setup(canvasSize: Size, canvas: Canvas) {
-        if let canvasSize = canvas.canvasSize {
-            // Clear the title screen from canvas
-            clearCanvas(canvas: canvas)            
-            /*
-             The wordle grid has 6 rows and 5 columns, by identifying the size of each box and the spacing inbetween them,
-             we can find the total size of the grid and center it around the middle of the canvas
-             */
-            let midpoint = returnCenter(rect: Rect(size: canvasSize))
-            let wordleAnswerBoxSize = Size(width: 60, height: 60)
-            let spacing = 8
-            // Multiply width of each box by number of columns, and spacing by number of columns minus one, similar for height
-            let wordleGridSize = Size(width: (wordleAnswerBoxSize.width * 5) + (spacing * 4), height: (wordleAnswerBoxSize.height * 6) + (spacing * 5))
-            let wordleGridCenterPoint = midpoint - Point(x: 0, y: canvasSize.height / 6)
-            let wordleGridRect = returnCenteredRect(rect: Rect(size: wordleGridSize), center: wordleGridCenterPoint)            
-            let strokeStyle = StrokeStyle(color: Color(.darkgray))
-            let lineWidth = LineWidth(width: 2)
-            renderGrid(to: canvas, rowCount: 6, columnCount: 5, spacing: 8, rect: Rect(topLeft: wordleGridRect.topLeft, size: wordleAnswerBoxSize), fillMode: .stroke, strokeStyle: strokeStyle, lineWidth: lineWidth)
-
-            let topLine = Path(fillMode: .stroke)
-            topLine.moveTo(Point(x:0, y:50))
-            topLine.lineTo(Point(x:canvasSize.width, y: 50))
-            canvas.render(topLine)
-        }
         
-        dispatcher.registerEntityMouseClickHandler(handler:self)
-    }
-    
-    func onEntityMouseClick(globalLocation: Point) {
-
-    }
-
-    override func teardown() {
-        dispatcher.unregisterEntityMouseClickHandler(handler:self)
     }
 
 

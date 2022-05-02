@@ -8,13 +8,13 @@ import Scenes
 
 
 class WordleBackgroundLayer : Layer {
-      let background = WordleBackground()
 
-      init() {
-          // Using a meaningful name can be helpful for debugging
-          super.init(name:"WordleBackground")
+    
 
-          // We insert our RenderableEntities in the constructor
-          insert(entity:background, at:.back)
-      }
-  }
+    init() {
+        // Using a meaningful name can be helpful for debugging
+        super.init(name:"WordleBackground")
+
+        // We insert our RenderableEntities in the constructor
+    }
+}
