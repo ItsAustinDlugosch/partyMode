@@ -17,7 +17,7 @@ class Letter :  RenderableEntity {
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Letter")
     }
-
+    
     func calculatePoint(point: Point, length: Int, angle: Double) -> Point {
         let newPoint : Point
         let radianAngle : CGFloat = angle * Double.pi / 180.0
@@ -26,7 +26,7 @@ class Letter :  RenderableEntity {
         newPoint = point + Point(x: x, y: y)
         return newPoint
     }
-
+    
     func lineToDiagonal(path: Path, currentPoint: inout Point, length: Int, angle: Double) {
         currentPoint = calculatePoint(point: currentPoint, length: length, angle: angle)
         path.lineTo(currentPoint)
@@ -158,11 +158,14 @@ class Letter :  RenderableEntity {
         path.lineTo(startingPoint)
     }
     func drawN(path: Path, point: Point, scale: Int) {
-
+        
     }
     func drawO(path: Path, point: Point, scale: Int) {
+        
+        
         // Start of Development = Top of O
-        let startingPoint = point
+
+        let startingPoint = point        
 
         path.arc(center: startingPoint, radius: scale * 2)
         path.moveTo(startingPoint + Point(x: scale * 3, y: 0))
@@ -171,24 +174,28 @@ class Letter :  RenderableEntity {
         path.moveTo(startingPoint)
     }
     func drawP(path: Path, point: Point, scale: Int) {
-        // Start of Development = Top Left of P
         let startingPoint = point
         var currentPoint = point
         path.moveTo(currentPoint)
-
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale, y: 0))
+        
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 6))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -2))
         currentPoint += Point(x: scale, y: scale * -3 / 2)
         path.arc(center: currentPoint, radius: scale * 3, startAngle: Double.pi * 1.5, endAngle: Double.pi * 0.5)
-        
-
         path.lineTo(startingPoint)
-        
-    }
-    func drawQ(path: Path, point: Point, scale: Int) {
 
+    }
+    
+    func drawQ(path: Path, point: Point, scale: Int) {
+        
     }
     func drawR(path: Path, point: Point, scale: Int) {
+<<<<<<< HEAD
        
+=======
+>>>>>>> 520d0ae2edfb66e515358307336b1c772bdf0261
         
     }
     func drawS(path: Path, point: Point, scale: Int) {
@@ -240,7 +247,6 @@ class Letter :  RenderableEntity {
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
         lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
-
         path.lineTo(startingPoint)        
     }
     func drawZ(path: Path, point: Point, scale: Int) {
@@ -306,6 +312,4 @@ class Letter :  RenderableEntity {
         }
         canvas.render(path)
     }
-
-
 }
