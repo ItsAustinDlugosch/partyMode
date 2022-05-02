@@ -175,7 +175,8 @@ class Letter :  RenderableEntity {
 
     }
     func drawR(path: Path, point: Point, scale: Int) {
-
+       
+        
     }
     func drawS(path: Path, point: Point, scale: Int) {
 
