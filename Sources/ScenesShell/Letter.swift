@@ -230,7 +230,6 @@ class Letter :  RenderableEntity {
         let startingPoint = point
         var currentPoint = point
         path.moveTo(currentPoint)
-<<<<<<< HEAD
 
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -4))
         lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9, angle: 200)
@@ -241,27 +240,8 @@ class Letter :  RenderableEntity {
         lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
 
-        path.lineTo(startingPoint)
-=======
->>>>>>> 80e85d4569f9519aecbcb1e475dd5d6795042da8
-
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -4))
-        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9, angle: 200)
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
-        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 20)
-        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 160)
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
-        lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
-
-        path.lineTo(startingPoint)
-        
+        path.lineTo(startingPoint)        
     }
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 80e85d4569f9519aecbcb1e475dd5d6795042da8
     func drawZ(path: Path, point: Point, scale: Int) {
 
     }
