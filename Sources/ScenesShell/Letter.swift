@@ -145,22 +145,21 @@ class Letter :  RenderableEntity {
         path.lineTo(startingPoint)
     }
     func drawN(path: Path, point: Point, scale: Int) {
-
+        
     }
     func drawO(path: Path, point: Point, scale: Int) {
-
+        
     }
     func drawP(path: Path, point: Point, scale: Int) {
         let outerPath = Path(fillMode: .stroke)
         outerPath.arc(center: Point(x: 600, y: 200), radius: 100, startAngle: 1.2 * Double.pi, endAngle: 1.2 * Double.pi)
-
-        canvas.render(outerPath)
+        
     }
     func drawQ(path: Path, point: Point, scale: Int) {
-
+        
     }
     func drawR(path: Path, point: Point, scale: Int) {
-
+        
     }
     func drawS(path: Path, point: Point, scale: Int) {
 
@@ -211,7 +210,7 @@ class Letter :  RenderableEntity {
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
         lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
-
+        
         path.lineTo(startingPoint)
         
     }
