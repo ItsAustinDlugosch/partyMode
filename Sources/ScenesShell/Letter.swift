@@ -177,14 +177,16 @@ class Letter :  RenderableEntity {
         let startingPoint = point
         var currentPoint = point
         path.moveTo(currentPoint)
-        
+
+        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -1))
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 6))
         lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
-        lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -2))
-        currentPoint += Point(x: scale, y: scale * -3 / 2)
-        path.arc(center: currentPoint, radius: scale * 3, startAngle: Double.pi * 1.5, endAngle: Double.pi * 0.5)
-        path.lineTo(startingPoint)
+        currentPoint += Point(x: 0, y: scale * -4)
+        path.arc(center: currentPoint, radius: scale * 2, startAngle: Double.pi * 1.5, endAngle: Double.pi * 0.5)
+        path.moveTo(currentPoint + Point(x: 0, y: scale * 1))
+        path.arc(center: currentPoint, radius: scale, startAngle: Double.pi * 0.5, endAngle: Double.pi * 1.5, antiClockwise: true)
+        path.moveTo(startingPoint)
 
     }
     
