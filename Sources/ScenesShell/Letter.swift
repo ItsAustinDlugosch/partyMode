@@ -166,12 +166,10 @@ class Letter :  RenderableEntity {
         // Start of Development = Top of O
 
         let startingPoint = point        
+        let ellipse = Ellipse(center: startingPoint, radiusX: scale * 2, radiusY: scale * 5 / 2)
+        let outerEllipse = Ellipse(center: startingPoint, radiusX: scale * 2, radiusY: scale * 5 / 2)
 
-        path.arc(center: startingPoint, radius: scale * 2)
-        path.moveTo(startingPoint + Point(x: scale * 3, y: 0))
-        path.arc(center: startingPoint, radius: scale * 3, antiClockwise: true)
-
-        path.moveTo(startingPoint)
+        
     }
     func drawP(path: Path, point: Point, scale: Int) {
         let startingPoint = point
@@ -192,10 +190,6 @@ class Letter :  RenderableEntity {
         
     }
     func drawR(path: Path, point: Point, scale: Int) {
-<<<<<<< HEAD
-       
-=======
->>>>>>> 520d0ae2edfb66e515358307336b1c772bdf0261
         
     }
     func drawS(path: Path, point: Point, scale: Int) {
