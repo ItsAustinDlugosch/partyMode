@@ -116,7 +116,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
       override func setup(canvasSize: Size, canvas: Canvas) {
           if let canvasSize = canvas.canvasSize {
               let background = Rect(size: canvasSize)
-              renderRectangle(to: canvas, rect: background, fillMode: .fill, fillStyle: FillStyle(color: Color(.lightcyan)))
+              renderRectangle(to: canvas, rect: background, fillMode: .fill, fillStyle: FillStyle(color: Color(.thistle)))
               let canvasCenter = returnCenter(rect: background)
 
               let crosswordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
