@@ -13,6 +13,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
     var buttons = [Rect?]()
     var rect : Rect?
     var entered = false
+    var victory = false
     var answer = [Character?]()
     var fiveLetterWords = [String]()
     
@@ -217,18 +218,18 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
           var colorSequence : [Color.Name?] = [nil, nil, nil, nil, nil]
           for i in 0 ..< guess.count {
               if guess[i]! == answerArray[i] {
-                  colorSequence[i] = .green
+                  colorSequence[i] = .mediumseagreen
                   answerArray[i] = nil // Remove the green letter from the answer to account for green letters
               }
           }
               for i in 0 ..< guess.count {
                   if answerArray.contains(guess[i]!)  && colorSequence[i] != .green {
-                  colorSequence[i] = .yellow
+                      colorSequence[i] = .darkkhaki
                   }
               }          
           for i in 0 ..< colorSequence.count {
               if colorSequence[i] == nil {
-                  colorSequence[i] = .darkgray
+                  colorSequence[i] = .gray
               }
           }
           return colorSequence
@@ -315,6 +316,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
 
     override func render(canvas: Canvas) {
         if let canvasSize = canvas.canvasSize {
+            if guessCount != 6 && !victory {
             let midpoint = returnCenter(rect: Rect(size: canvasSize))
             let canvasScaleFactor = canvasSize.height / 90
             let wordleAnswerBoxSize = Size(width: canvasScaleFactor * 7, height: canvasScaleFactor * 7)
@@ -346,19 +348,29 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
 
 
                     if fiveLetterWords.contains(guessWord) {
-                    renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: rowTopLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: currentGuess, colors: returnColorSequence(answer: answer, guess: currentGuess))
-                    currentGuess = [Character?]()
-                    guessCount += 1
+                        renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: rowTopLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: currentGuess, colors: returnColorSequence(answer: answer, guess: currentGuess))
+                        if returnColorSequence(answer: answer, guess: currentGuess) == [.mediumseagreen,.mediumseagreen,.mediumseagreen,.mediumseagreen,.mediumseagreen,] {
+                            victory = true
+                            clearCanvas(canvas: canvas)
+                            
+                            // VICTORY PAGE
+                            
+                        }
+                        
+                        currentGuess = [Character?]()
+                        guessCount += 1
                     } else {
                         print("Not a real word.")
                     }
-
+                    
 
                 }
+
                 entered = false
             }
 
             // renderButtonRow(to: canvas, rect: Rect, fillMode: FillMode, radius: Int, columnCount: Int, spacing: Int)
+            }
         }
     }
     
