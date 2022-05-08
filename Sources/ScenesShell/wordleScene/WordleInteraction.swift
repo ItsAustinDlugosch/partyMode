@@ -1,5 +1,6 @@
 import Scenes
 import Igis
+import Foundation
 
   /*
      This class is responsible for rendering the background.
@@ -7,18 +8,38 @@ import Igis
 
 
 class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
-    var guessCount = 3
-    var currentGuess = ""
+    var guessCount = 0
+    var currentGuess = [Character?]()
     var buttons = [Rect?]()
     var rect : Rect?
+    var entered = false
+    var answer = [Character?]()
+    var fiveLetterWords = [String]()
     
     init() {
-
         // Using a meaningful name can be helpful for debugging
         super.init(name:"WordleInteraction")
     }
 
     // Functions:
+    func pullWords() throws {
+        let dictionaryURL = URL.init(fileURLWithPath: "/usr/share/dict/words")
+        let contents = try String(contentsOf: dictionaryURL, encoding: .utf8)
+        let words = contents.split(separator: "\n")
+
+        for word in words {
+            if word.count == 5 && !word.contains("'") && !word.contains("é"){
+                fiveLetterWords.append(word.uppercased())
+            }
+        }
+
+        let selectedAnswer = fiveLetterWords.randomElement()!
+        for c in selectedAnswer {
+            answer.append(c)
+        }
+        
+    }
+    
 
     // This function clears the entire canvas of other objects
     func clearCanvas(canvas:Canvas) {
@@ -51,30 +72,53 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
         let centeredRect = Rect(topLeft: center - Point(x: rect.size.width / 2, y: rect.size.height / 2), size: rect.size)
         return centeredRect
     }
-
-
     
-    // This function makes a rectangle, with other customizeable options
+    // This function makes a rectangle, with other customizeable options, such as appearance factors and an option to include a letter
     func makeRectangle(to canvas: Canvas, rect: Rect, fillMode: FillMode = .stroke,
                        strokeStyle: StrokeStyle = StrokeStyle(color: Color(.black)),
                        lineWidth: LineWidth = LineWidth(width: 1),
-                       fillStyle: FillStyle = FillStyle(color: Color(.black))) {
+                       fillStyle: FillStyle = FillStyle(color: Color(.black)),
+                       letter: Character? = nil) {
         
         canvas.render(strokeStyle, lineWidth, fillStyle, Rectangle(rect: rect, fillMode: fillMode))
-        
+
+        if letter != nil { // include text that is centered on the button
+             let textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
+              
+             let text = Text(location: textLocation, text: String(letter!))
+              let textFillStyle = FillStyle(color: Color(.black))
+              text.font = "15pt Helvetica"
+              text.alignment = Text.Alignment.center
+              text.baseline = Text.Baseline.middle              
+              canvas.render(textFillStyle, text)
+          }          
+
     }
 
-    // This function makes a row of renctangles, with the customizeable options
+    // This function makes a row of renctangles, with the customizeable options, such as appearance factors and an option to include a letter
     func renderRow(to canvas: Canvas, count: Int, spacing: Int, rect: Rect, fillMode: FillMode = .stroke,
                  strokeStyle: StrokeStyle = StrokeStyle(color: Color(.black)),
                  lineWidth: LineWidth = LineWidth(width: 1),
-                 fillStyle: FillStyle = FillStyle(color: Color(.black))) {
-
+                 fillStyle: FillStyle = FillStyle(color: Color(.black)),
+                 letters: [Character?] = [nil], colors: [Color.Name?] = [nil]) {
+        var fillColor = fillStyle
+        var rectText = letters
+        var rectColors = colors
+        while rectText.count != count {
+            rectText.append(nil)
+        }
+        while rectColors.count != count {
+            rectColors.append(nil)
+        }
+                
         for i in 0 ..< count {
+            if rectColors[i] != nil {
+                fillColor = FillStyle(color: Color(rectColors[i]!))
+            }
             makeRectangle(to: canvas, rect: Rect(topLeft: Point(x: rect.topLeft.x + spacing * i + rect.size.width * i, y: rect.topLeft.y),
                                                  size: Size(width: rect.size.width, height: rect.size.height)),
-                          fillMode: fillMode, strokeStyle: strokeStyle, lineWidth: lineWidth, fillStyle: fillStyle)
-
+                          fillMode: fillMode, strokeStyle: strokeStyle, lineWidth: lineWidth, fillStyle: fillColor,
+                          letter: rectText[i])
         }
         
     }
@@ -85,13 +129,13 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
                   lineWidth: LineWidth = LineWidth(width: 1),
                   fillStyle: FillStyle = FillStyle(color: Color(.black))) {
         for i in 0 ..< rowCount { // Spacing between columns in renderRow, spacing between rows in renderGrid 
-            renderRow(to: canvas, count: columnCount, spacing: spacing, rect: Rect(topLeft: Point(x: rect.topLeft.x, y: rect.topLeft.y + spacing * i + rect.size.height * i), size: Size(width: rect.size.width, height: rect.size.height)), fillMode: fillMode, strokeStyle: strokeStyle, lineWidth: lineWidth, fillStyle: fillStyle)
+            renderRow(to: canvas, count: columnCount, spacing: spacing, rect: Rect(topLeft: Point(x: rect.topLeft.x, y: rect.topLeft.y + (spacing * i) + (rect.size.height * i)), size: Size(width: rect.size.width, height: rect.size.height)), fillMode: fillMode, strokeStyle: strokeStyle, lineWidth: lineWidth, fillStyle: fillStyle)
             
         }    
         
     }
 
-    // Function that adds rounded corners to a rectangle
+    // Function that adds rounded corners to a rectangle, with a title in the center
       func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
           // New width and height accounting for rounded corners
           let width = rect.size.width - (2 * radius) 
@@ -136,7 +180,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
           
           canvas.render(FillStyle(color: Color(.lightgray)), button)
 
-         if title != nil { // include text that is centered on the button
+          if title != nil { // include text that is centered on the button
              var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
               if centered { // Offset if the button is centered
                   textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
@@ -151,6 +195,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
           }          
       }
 
+      // Function that renders a tow of buttons each with its own name
       func renderButtonRow(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, titles: [String?] = [nil], columnCount: Int, spacing: Int) {
           var buttonNames = titles
           while buttonNames.count != columnCount {
@@ -165,6 +210,30 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
           }
       }
 
+      // Returns an array of colors used for answers in wordle
+      func returnColorSequence(answer: [Character?], guess: [Character?]) -> [Color.Name?] {
+          var answerArray = answer
+         
+          var colorSequence : [Color.Name?] = [nil, nil, nil, nil, nil]
+          for i in 0 ..< guess.count {
+              if guess[i]! == answerArray[i] {
+                  colorSequence[i] = .green
+                  answerArray[i] = nil // Remove the green letter from the answer to account for green letters
+              }
+          }
+              for i in 0 ..< guess.count {
+                  if answerArray.contains(guess[i]!)  && colorSequence[i] != .green {
+                  colorSequence[i] = .yellow
+                  }
+              }          
+          for i in 0 ..< colorSequence.count {
+              if colorSequence[i] == nil {
+                  colorSequence[i] = .darkgray
+              }
+          }
+          return colorSequence
+      }
+
     // Override Functions:
 
     override func setup(canvasSize: Size, canvas: Canvas) {
@@ -173,6 +242,14 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
             clearCanvas(canvas: canvas)
             let background = Rect(size: canvasSize)
 
+            do {
+                try pullWords()
+            } catch {
+                fatalError("Unable to obtain dictionary")
+            }
+
+            print(answer)
+            
             /*
              The wordle grid has 6 rows and 5 columns, by identifying the size of each box and the spacing inbetween them,
              we can find the total size of the grid and center it around the middle of the canvas
@@ -194,7 +271,6 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
             
             let midpoint = returnCenter(rect: Rect(size: canvasSize))
             let canvasScaleFactor = canvasSize.height / 90
-
             let wordleAnswerBoxSize = Size(width: canvasScaleFactor * 7, height: canvasScaleFactor * 7)
             let spacing = canvasScaleFactor
             // Multiply width of each box by number of columns, and spacing by number of columns minus one, similar for height
@@ -204,6 +280,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
             let strokeStyle = StrokeStyle(color: Color(.darkgray))
             let lineWidth = LineWidth(width: 2)
             renderGrid(to: canvas, rowCount: 6, columnCount: 5, spacing: 8, rect: Rect(topLeft: wordleGridRect.topLeft, size: wordleAnswerBoxSize), fillMode: .stroke, strokeStyle: strokeStyle, lineWidth: lineWidth)
+
 
             let topLine = Path(fillMode: .stroke)
             topLine.moveTo(Point(x:0, y:canvasScaleFactor * 6)) // Topline is 84, 90 - 84 = 6
@@ -226,8 +303,10 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
 
             let enterButton = Rect(topLeft: Point(x: qButton.topLeft.x, y: zButton.topLeft.y), size: Size(width: canvasScaleFactor * 15 / 2, height: canvasScaleFactor * 7))
             renderButton(to: canvas, rect: enterButton, fillMode: .fill, radius: canvasScaleFactor / 2, title: "ENTER")
+            buttons.append(enterButton)
             let deleteButton = Rect(topLeft: Point(x: zButton.topLeft.x + canvasScaleFactor * 42, y: zButton.topLeft.y), size: Size(width: canvasScaleFactor * 15 / 2, height: canvasScaleFactor * 7))
             renderButton(to: canvas, rect: deleteButton, fillMode: .fill, radius: canvasScaleFactor / 2)
+            buttons.append(deleteButton)
             rect = background
         }
         
@@ -238,11 +317,48 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
         if let canvasSize = canvas.canvasSize {
             let midpoint = returnCenter(rect: Rect(size: canvasSize))
             let canvasScaleFactor = canvasSize.height / 90
-            
-            let rowTopLeft = Point(x: midpoint.x - canvasScaleFactor * 39 / 2, y: canvasSize.height) - Point(x: 0, y: canvasScaleFactor * 78 - (guessCount * canvasScaleFactor * 8)) // This is scuffed but it lines up
-            canvas.render(Rectangle(rect: Rect(topLeft: rowTopLeft, size: Size(width: 20, height: 20)), fillMode: .stroke))
+            let wordleAnswerBoxSize = Size(width: canvasScaleFactor * 7, height: canvasScaleFactor * 7)
+            let spacing = canvasScaleFactor
+            // Multiply width of each box by number of columns, and spacing by number of columns minus one, similar for height
+            let wordleGridSize = Size(width: (wordleAnswerBoxSize.width * 5) + (spacing * 4), height: (wordleAnswerBoxSize.height * 6) + (spacing * 5))
+            let wordleGridCenterPoint = Point(x: midpoint.x, y: canvasSize.height) - Point(x: 0, y: canvasScaleFactor * 54)
+            let wordleGridRect = returnCenteredRect(rect: Rect(size: wordleGridSize), center: wordleGridCenterPoint)            
 
-//            renderButtonRow(to: canvas, rect: Rect, fillMode: FillMode, radius: Int, columnCount: Int, spacing: Int)
+            
+            let darkgrayStrokeStyle = StrokeStyle(color: Color(.black))
+            let whiteFillStyle = FillStyle(color: Color(.white))
+            let rowTopLeft = wordleGridRect.topLeft + Point(x: 0, y: (guessCount * canvasScaleFactor * 8))
+            renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: rowTopLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: currentGuess)
+
+            func characterArrayToString (array: [Character?]) -> String {
+                var string = ""
+                for c in array {
+                    string.append(String(c!))
+                }
+                return string
+            }
+
+            if entered {
+                let answerWord = characterArrayToString(array: answer)
+                let guessWord = characterArrayToString(array: currentGuess)
+                print("Answer: \(answerWord), Guess: \(guessWord)")
+                if currentGuess.count == answer.count  && !currentGuess.contains(nil) {
+
+
+                    if fiveLetterWords.contains(guessWord) {
+                    renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: rowTopLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: currentGuess, colors: returnColorSequence(answer: answer, guess: currentGuess))
+                    currentGuess = [Character?]()
+                    guessCount += 1
+                    } else {
+                        print("Not a real word.")
+                    }
+
+
+                }
+                entered = false
+            }
+
+            // renderButtonRow(to: canvas, rect: Rect, fillMode: FillMode, radius: Int, columnCount: Int, spacing: Int)
         }
     }
     
@@ -256,62 +372,74 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
               }
           }
 
-          if characterNumber != nil && currentGuess.count <= 5{
+          if characterNumber != nil {
+              var addLetter : Character = "."
               switch characterNumber { // Switch scenes to each game scene
               case 0:
-                  currentGuess.append("Q")
+                  addLetter = "Q"
               case 1:
-                  currentGuess.append("W")
+                  addLetter = "W"
               case 2:
-                  currentGuess.append("E")
+                  addLetter = "E"
               case 3:
-                  currentGuess.append("R")
+                  addLetter = "R"
               case 4:
-                  currentGuess.append("T")
+                  addLetter = "T"
               case 5:
-                  currentGuess.append("Y")
+                  addLetter = "Y"
               case 6:
-                  currentGuess.append("U")
+                  addLetter = "U"
               case 7:
-                  currentGuess.append("I")
+                  addLetter = "I"
               case 8:
-                  currentGuess.append("O")
+                  addLetter = "O"
               case 9:
-                  currentGuess.append("P")
+                  addLetter = "P"
               case 10:
-                  currentGuess.append("A")
+                  addLetter = "A"
               case 11:
-                  currentGuess.append("S")
+                  addLetter = "S"
               case 12:
-                  currentGuess.append("D")
+                  addLetter = "D"
               case 13:
-                  currentGuess.append("F")
+                  addLetter = "F"
               case 14:
-                  currentGuess.append("G")
+                  addLetter = "G"
               case 15:
-                  currentGuess.append("H")
+                  addLetter = "H"
               case 16:
-                  currentGuess.append("J")
+                  addLetter = "J"
               case 17:
-                  currentGuess.append("K")
+                  addLetter = "K"
               case 18:
-                  currentGuess.append("L")
+                  addLetter = "L"
               case 19:
-                  currentGuess.append("Z")
+                  addLetter = "Z"
               case 20:
-                  currentGuess.append("X")
+                  addLetter = "X"
               case 21:
-                  currentGuess.append("C")
+                  addLetter = "C"
               case 22:
-                  currentGuess.append("V")
+                  addLetter = "V"
               case 23:
-                  currentGuess.append("B")
+                  addLetter = "B"
               case 24:
-                  currentGuess.append("N")
+                  addLetter = "N"
               case 25:
-                  currentGuess.append("M")
+                  addLetter = "M"
+              case 26:
+                  if currentGuess.count == 5 {                      
+                      entered = true
+                  }
+              case 27:
+                  if currentGuess.count != 0 {
+                      currentGuess.remove(at: currentGuess.count - 1)
+                  }
               default:
                   fatalError("Button does not exist")
+              }
+              if currentGuess.count < 5 && addLetter != "."{
+                  currentGuess.append(addLetter)
               }
           }
     }

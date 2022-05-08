@@ -13,5 +13,6 @@ class WordsearchBackground : RenderableEntity {
         
           // Using a meaningful name can be helpful for debugging
           super.init(name:"WordsearchBackground")
-      }
+    }
+    
 }
