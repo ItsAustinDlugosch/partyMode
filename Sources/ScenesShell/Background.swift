@@ -119,15 +119,15 @@ class Background : RenderableEntity, EntityMouseClickHandler {
               renderRectangle(to: canvas, rect: background, fillMode: .fill, fillStyle: FillStyle(color: Color(.thistle)))
               let canvasCenter = returnCenter(rect: background)
 
-              let crosswordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
+              let TicTacToeButton = Rect(topLeft: Point(x: canvasCenter.x, y: 300), size: Size(width: 300, height: 50))
               let wordleButton = Rect(topLeft: Point(x: canvasCenter.x, y: 375), size: Size(width: 300, height: 50))
-              let wordsearchButton = Rect(topLeft: Point(x: canvasCenter.x, y: 450), size: Size(width: 300, height: 50))
-              buttons.append(crosswordButton)
+              let crossWordButton = Rect(topLeft: Point(x: canvasCenter.x, y: 450), size: Size(width: 300, height: 50))
+              buttons.append(TicTacToeButton)
               buttons.append(wordleButton)
-              buttons.append(wordsearchButton)
+              buttons.append(crossWordButton)
               
-              let buttonColors : [Color.Name] = [.mediumaquamarine, .deepskyblue, .lightseagreen]
-              let buttonTitles : [String] = ["Crossword", "Wordle", "Wordsearch"]
+              let buttonColors : [Color.Name] = [.darkseagreen, .lightblue, .lightpink]
+              let buttonTitles : [String] = ["TicTacToe", "Wordle", "2048"]
 
               precondition(buttons.count == buttonColors.count && buttons.count == buttonTitles.count && !buttons.contains(nil), "Number of buttons does not equal number of colors.")
               for i in 0 ..< buttons.count {

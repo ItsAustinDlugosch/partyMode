@@ -326,6 +326,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
             renderButton(to: canvas, rect: deleteButton, fillMode: .fill, radius: canvasScaleFactor / 2)
             buttons.append(deleteButton)
             rect = background
+         
         }
         
         dispatcher.registerEntityMouseClickHandler(handler:self)
