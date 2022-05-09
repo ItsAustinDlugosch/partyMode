@@ -1,11 +1,12 @@
+
 import Scenes
 
 
 class CrosswordScene: Scene {
 
-    let backgroundLayer = CrosswordBackgroundLayer()
-    let interactionLayer = CrosswordInteractionLayer()
-    let foregroundLayer = CrosswordForegroundLayer()
+    let backgroundLayer = TictactoeBackgroundLayer()
+    let interactionLayer = TictactoeInteractionLayer()
+    let foregroundLayer = TictactoeForegroundLayer()
 
     init() {
         super.init(name: "Crossword")

@@ -1,19 +1,19 @@
+
 import Scenes
 
   /*
-     This class is responsible for the background Layer.
+     This class is responsible for the foreground Layer.
      Internally, it maintains the RenderableEntities for this layer.
    */
 
 
-class CrosswordBackgroundLayer : Layer {
-      let crosswordBackground = CrosswordBackground()
+class TictactoeForegroundLayer : Layer {
 
       init() {
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"CrosswordBackground")
+          super.init(name:"TictactoeForeground")
 
           // We insert our RenderableEntities in the constructor
-          insert(entity:crosswordBackground, at:.back)
+
       }
   }

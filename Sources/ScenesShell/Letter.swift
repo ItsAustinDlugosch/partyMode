@@ -187,7 +187,6 @@ class Letter :  RenderableEntity {
         path.moveTo(startingPoint) 
     }
     func drawP(path: Path, point: Point, scale: Int) {
-        let startingPoint = point
         var currentPoint = point
         path.moveTo(currentPoint)
 
@@ -214,7 +213,6 @@ class Letter :  RenderableEntity {
         
     }
     func drawR(path: Path, point: Point, scale: Int) {
-        let startingPoint = point
         var currentPoint = point
         path.moveTo(currentPoint)
 

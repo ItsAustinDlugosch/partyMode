@@ -8,14 +8,21 @@ import Foundation
 
 
 class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
-    var guessCount = 0
-    var currentGuess = [Character?]()
+
     var buttons = [Rect?]()
     var rect : Rect?
-    var entered = false
-    var victory = false
-    var answer = [Character?]()
+
     var fiveLetterWords = [String]()
+    var answer = [Character?]()
+
+    var guessCount = 0
+    var currentGuess = [Character?]()
+    var entered = false
+    
+    var victory = false
+
+    var frame = 0
+    var animationBool = false
     
     init() {
         // Using a meaningful name can be helpful for debugging
@@ -135,6 +142,16 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
         }    
         
     }
+
+        func renderText(to canvas: Canvas, location: Point, text: String, font: String) {
+        let text = Text(location: location, text: text)
+        text.font = font
+
+        let fillStyle = FillStyle(color: Color(.black))
+
+        canvas.render(fillStyle, text)
+    }
+
 
     // Function that adds rounded corners to a rectangle, with a title in the center
       func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
@@ -316,6 +333,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
 
     override func render(canvas: Canvas) {
         if let canvasSize = canvas.canvasSize {
+            
             if guessCount != 6 && !victory {
             let midpoint = returnCenter(rect: Rect(size: canvasSize))
             let canvasScaleFactor = canvasSize.height / 90
@@ -351,9 +369,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
                         renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: rowTopLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: currentGuess, colors: returnColorSequence(answer: answer, guess: currentGuess))
                         if returnColorSequence(answer: answer, guess: currentGuess) == [.mediumseagreen,.mediumseagreen,.mediumseagreen,.mediumseagreen,.mediumseagreen,] {
                             victory = true
-                            clearCanvas(canvas: canvas)
                             
-                            // VICTORY PAGE
                             
                         }
                         
@@ -366,12 +382,38 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
 
                 }
 
+
                 entered = false
             }
 
             // renderButtonRow(to: canvas, rect: Rect, fillMode: FillMode, radius: Int, columnCount: Int, spacing: Int)
             }
+            if victory == true {
+                let midpoint = returnCenter(rect: Rect(size: canvasSize))
+                let canvasScaleFactor = canvasSize.height / 90
+                let wordleAnswerBoxSize = Size(width: canvasScaleFactor * 7, height: canvasScaleFactor * 7)
+                let spacing = canvasScaleFactor
+                let darkgrayStrokeStyle = StrokeStyle(color: Color(.black))
+                let whiteFillStyle = FillStyle(color: Color(.white))
+                let winRowRect = returnCenteredRect(rect: Rect(size: Size(width: wordleAnswerBoxSize.width * 5 + spacing * 4, height: wordleAnswerBoxSize.height)), center: midpoint)
+                let victoryPage = Rect(size: canvasSize)
+                canvas.render(FillStyle(color: Color(.green)), Rectangle(rect: victoryPage, fillMode: .fill))
+                renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: winRowRect.topLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: answer, colors: returnColorSequence(answer: answer, guess: answer))                    
+                if frame / 60 == 1 {
+                    animationBool = !animationBool
+
+                }
+                if animationBool {
+                    renderText(to: canvas, location: Point(x: midpoint.x, y: midpoint.y / 2), text: "YOU WIN!!", font: "80pt Arial")
+                } else {
+                    renderText(to: canvas, location: Point(x: midpoint.x, y: midpoint.y * 3 / 2), text: "YOU WIN!!", font: "80pt Arial")
+                }
+                frame = (frame + 1) % 61
+                print(frame)
+                print(animationBool)
+            }
         }
+
     }
     
     func onEntityMouseClick(globalLocation: Point) {

@@ -1,3 +1,4 @@
+
 import Scenes
 
   /*
@@ -6,11 +7,11 @@ import Scenes
    */
 
 
-class CrosswordInteractionLayer : Layer {
+class TictactoeInteractionLayer : Layer {
 
       init() {
           // Using a meaningful name can be helpful for debugging
-          super.init(name:"CrosswordInteraction")
+          super.init(name:"TictactoeInteraction")
 
           // We insert our RenderableEntities in the constructor
 
