@@ -1,3 +1,4 @@
+import Foundation
 import Scenes
 import Igis
 
@@ -17,7 +18,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
     }
 
       // Returns center of a particular
-      func returnCenter(rect: Rect) -> Point {           
+    func returnCenter(rect: Rect) -> Point {           
           return Point(x: (rect.size.width / 2) + rect.topLeft.x, y: (rect.size.height / 2) + rect.topLeft.y)          
       }
 
@@ -111,6 +112,199 @@ class Background : RenderableEntity, EntityMouseClickHandler {
               canvas.render(fillStyle, text)
           }          
       }
+
+      // Letters:
+      func calculatePoint(point: Point, length: Int, angle: Double) -> Point {
+          let newPoint : Point
+          let radianAngle : CGFloat = angle * Double.pi / 180.0
+          let x = Int((sin(radianAngle)) * CGFloat(length))
+          let y = Int((cos(radianAngle)) * CGFloat(length))
+          newPoint = point + Point(x: x, y: y)
+          return newPoint
+      }
+      
+      func lineToDiagonal(path: Path, currentPoint: inout Point, length: Int, angle: Double) {
+          currentPoint = calculatePoint(point: currentPoint, length: length, angle: angle)
+          path.lineTo(currentPoint)
+      }
+      func moveToDiagonal(path: Path, currentPoint: inout Point, length: Int, angle: Double) {
+          currentPoint = calculatePoint(point: currentPoint, length: length, angle: angle)
+          path.moveTo(currentPoint)
+      }
+      func lineToCardinal(path: Path, currentPoint: inout Point, by: Point) {
+          currentPoint += by
+          path.lineTo(currentPoint)
+
+      }
+      func drawP(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          currentPoint += Point(x: 0, y: -2 * scale)
+          path.arc(center: currentPoint, radius: scale * 2, startAngle: Double.pi * 0.5, endAngle: Double.pi * 1.5, antiClockwise: true)
+          currentPoint += Point(x: 0, y: -2 * scale)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: -1 * scale, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 6))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -2))
+          currentPoint += Point(x: 0, y: -2 * scale)
+          path.moveTo(currentPoint)
+          path.arc(center: currentPoint, radius: scale, startAngle: Double.pi * 1.5, endAngle: Double.pi * 0.5, antiClockwise: false)
+          currentPoint += Point(x: 0, y: -2 * scale)
+          path.close()
+          canvas.render(path)
+      }
+      func drawA(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4, angle: 345)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale, angle: 165)
+          let bottomLeftInnerA = calculatePoint(point: currentPoint, length: scale, angle: 165)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale, y: 0))
+          let bottomRightInnerA = calculatePoint(point: currentPoint, length: scale, angle: 195)
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale, angle: 15)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4, angle: 195)
+          path.lineTo(startingPoint)
+          path.moveTo(bottomRightInnerA)
+          currentPoint = bottomRightInnerA
+          let topRightInnerA = calculatePoint(point: currentPoint, length: scale, angle: 195)
+          path.lineTo(bottomLeftInnerA)
+          currentPoint = bottomLeftInnerA
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale, angle: 165)
+          path.lineTo(topRightInnerA)
+          path.lineTo(bottomRightInnerA)
+          canvas.render(path)
+      }
+      func drawR(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          currentPoint += Point(x: 0, y: -2 * scale)
+          let startOfRCurve = calculatePoint(point: currentPoint, length: 2 * scale, angle: 30)
+          let endOfRCurve = currentPoint + Point(x: 0, y: scale * -2)
+          path.moveTo(endOfRCurve)
+          path.arc(center: currentPoint, radius: scale * 2, startAngle: Double.pi * 1.5, endAngle: Double.pi * 2 / 6, antiClockwise: false)
+          currentPoint = startOfRCurve
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3, angle: 40)
+          let bottomLeftDiagonalLeg = currentPoint
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: -1 * scale, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3, angle: 220)
+          currentPoint = Point(x: currentPoint.x, y: bottomLeftDiagonalLeg.y)
+          path.lineTo(currentPoint)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: -1 * scale, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -6))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          path.lineTo(endOfRCurve)
+          currentPoint += Point(x: 0, y: 2 * scale)
+          path.moveTo(currentPoint - Point(x: 0, y: scale))
+          path.arc(center: currentPoint, radius: scale, startAngle: Double.pi * 0.5, endAngle: Double.pi * 1.5, antiClockwise: true)
+          path.lineTo(currentPoint - Point(x: 0, y: scale))
+          canvas.render(path)
+      }
+      func drawT(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 3, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -4))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -1))
+          path.lineTo(startingPoint)
+          canvas.render(path)
+      }
+      func drawY(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -4))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9, angle: 200)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 20)
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 6, angle: 160)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 9,  angle: 340)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 4))
+          path.lineTo(startingPoint)
+          canvas.render(path)
+      }
+      func drawM(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 195)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 3))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -5))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 15)
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 4 , angle: 165)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 5))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -3))
+          lineToDiagonal(path: path, currentPoint: &currentPoint, length: scale * 3 , angle: 345)
+          path.lineTo(startingPoint)
+          canvas.render(path)
+      }
+      func drawO(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          path.arc(center: startingPoint, radius: scale * 2)
+          path.moveTo(startingPoint + Point(x: scale * 3, y: 0))
+          path.arc(center: startingPoint, radius: scale * 3, antiClockwise: true)
+          path.moveTo(startingPoint)
+          canvas.render(path)
+      }      
+      func drawD(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          currentPoint -= Point(x: 0, y: -3 * scale)
+          path.arc(center: currentPoint, radius: scale * 3, startAngle: Double.pi * 1.5, endAngle: Double.pi * 0.5)
+          currentPoint -= Point(x: 0, y: -3 * scale)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -6))
+          currentPoint += Point(x: scale, y: scale * 3)
+          path.moveTo(currentPoint + Point(x: 0, y: scale * 2))
+          path.arc(center: currentPoint, radius: scale * 2, startAngle: Double.pi * 0.5, endAngle: Double.pi * 1.5, antiClockwise: true)
+          currentPoint += Point(x: 0, y: scale * 2)
+          path.close()
+          canvas.render(path)
+      }
+      func drawE(to canvas: Canvas, point: Point, scale: Int) {
+          let path = Path(fillMode: .fillAndStroke)
+          let startingPoint = point
+          var currentPoint = point
+          path.moveTo(currentPoint)
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 3, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -2, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -1, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * 2, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * 1))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: scale * -3, y: 0))
+          lineToCardinal(path: path, currentPoint: &currentPoint, by: Point(x: 0, y: scale * -5))
+          path.lineTo(startingPoint)
+          canvas.render(path)
+      }
+
+
       
       // Override Functions
       override func setup(canvasSize: Size, canvas: Canvas) {
@@ -127,7 +321,7 @@ class Background : RenderableEntity, EntityMouseClickHandler {
               buttons.append(crossWordButton)
               
               let buttonColors : [Color.Name] = [.darkseagreen, .lightblue, .lightpink]
-              let buttonTitles : [String] = ["TicTacToe", "Wordle", "2048"]
+              let buttonTitles : [String] = ["Tic-Tac-Toe", "Wordle", "Rainbow Mouse"]
 
               precondition(buttons.count == buttonColors.count && buttons.count == buttonTitles.count && !buttons.contains(nil), "Number of buttons does not equal number of colors.")
               for i in 0 ..< buttons.count {
@@ -138,7 +332,17 @@ class Background : RenderableEntity, EntityMouseClickHandler {
                   renderButton(to: canvas, rect: buttons[i]!, fillMode: .fillAndStroke, radius: 20, centered: false, title: buttonTitles[i])
               }
 
-              // Fix**
+
+              drawP(to: canvas, point: Point(x: 40, y: 100), scale: 25)
+              drawA(to: canvas, point: Point(x: 100, y: 190), scale: 33)
+              drawR(to: canvas, point: Point(x: 240, y: 460), scale: 25)
+              drawT(to: canvas, point: Point(x: 320, y: 560), scale: 30)
+              drawY(to: canvas, point: Point(x: 470, y: 900), scale: 13)
+              drawM(to: canvas, point: Point(x: 1550, y: 200), scale: 30)
+              drawO(to: canvas, point: Point(x: 1650, y: 320), scale: 22)
+              drawD(to: canvas, point: Point(x: 1700, y: 440), scale: 25)
+              drawE(to: canvas, point: Point(x: 1800, y: 640), scale: 30)
+              
 
               rect = background
           }

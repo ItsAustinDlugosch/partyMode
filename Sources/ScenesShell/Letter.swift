@@ -17,7 +17,6 @@ class Letter :  RenderableEntity {
         // Using a meaningful name can be helpful for debugging
         super.init(name:"Letter")
     }
-    
     func calculatePoint(point: Point, length: Int, angle: Double) -> Point {
         let newPoint : Point
         let radianAngle : CGFloat = angle * Double.pi / 180.0
@@ -39,7 +38,8 @@ class Letter :  RenderableEntity {
         currentPoint += by
         path.lineTo(currentPoint)
 
-    }
+    }    
+
 
     func drawA(path: Path, point: Point, scale: Int) {
         // Start of Development - Start = left side, left leg bubble curve

@@ -91,64 +91,64 @@ class WordleBackground : RenderableEntity {
     }
 
     // Function that adds rounded corners to a rectangle
-      func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
-          // New width and height accounting for rounded corners
-          let width = rect.size.width - (2 * radius) 
-          let height = rect.size.height - (2 * radius)
-          
-          let button = Path(fillMode: fillMode)
+    func renderButton(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, title: String? = nil) {
+        // New width and height accounting for rounded corners
+        let width = rect.size.width - (2 * radius) 
+        let height = rect.size.height - (2 * radius)
+        
+        let button = Path(fillMode: fillMode)
 
-          // Start the path at the topLeft of the original rect, but move right by the radius
-          var currentPoint = Point(x: rect.topLeft.x + radius, y: rect.topLeft.y)
-          if centered {
-              currentPoint -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
-          }
-          
-          button.moveTo(currentPoint)
-          
-          currentPoint.x += width
-          button.lineTo(currentPoint)
-          
-          currentPoint.y += radius // Move down to center arc
-          button.arc(center: currentPoint, radius: radius, startAngle: 1.5 * Double.pi, endAngle: 2 * Double.pi)
-          currentPoint.x += radius
-          
-          currentPoint.y += height
-          button.lineTo(currentPoint)
+        // Start the path at the topLeft of the original rect, but move right by the radius
+        var currentPoint = Point(x: rect.topLeft.x + radius, y: rect.topLeft.y)
+        if centered {
+            currentPoint -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
+        }
+        
+        button.moveTo(currentPoint)
+        
+        currentPoint.x += width
+        button.lineTo(currentPoint)
+        
+        currentPoint.y += radius // Move down to center arc
+        button.arc(center: currentPoint, radius: radius, startAngle: 1.5 * Double.pi, endAngle: 2 * Double.pi)
+        currentPoint.x += radius
+        
+        currentPoint.y += height
+        button.lineTo(currentPoint)
 
-          currentPoint.x -= radius // Move left to center arc
-          button.arc(center: currentPoint, radius: radius, startAngle: 2 * Double.pi, endAngle: 0.5 * Double.pi)
-          currentPoint.y += radius
+        currentPoint.x -= radius // Move left to center arc
+        button.arc(center: currentPoint, radius: radius, startAngle: 2 * Double.pi, endAngle: 0.5 * Double.pi)
+        currentPoint.y += radius
 
-          currentPoint.x -= width
-          button.lineTo(currentPoint)
+        currentPoint.x -= width
+        button.lineTo(currentPoint)
 
-          currentPoint.y -= radius
-          button.arc(center: currentPoint, radius: radius, startAngle: 0.5 * Double.pi, endAngle: Double.pi)
-          currentPoint.x -= radius
+        currentPoint.y -= radius
+        button.arc(center: currentPoint, radius: radius, startAngle: 0.5 * Double.pi, endAngle: Double.pi)
+        currentPoint.x -= radius
 
-          currentPoint.y -= height
-          button.lineTo(currentPoint)
+        currentPoint.y -= height
+        button.lineTo(currentPoint)
 
-          currentPoint.x += radius
-          button.arc(center: currentPoint, radius: radius, startAngle:  Double.pi, endAngle: 1.5 * Double.pi)         
-          
-          canvas.render(FillStyle(color: Color(.lightgray)), button)
+        currentPoint.x += radius
+        button.arc(center: currentPoint, radius: radius, startAngle:  Double.pi, endAngle: 1.5 * Double.pi)         
+        
+        canvas.render(FillStyle(color: Color(.lightgray)), button)
 
-         if title != nil { // include text that is centered on the button
-             var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
-              if centered { // Offset if the button is centered
-                  textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
-              }
-              
-              let text = Text(location: textLocation, text: title!)
-              let fillStyle = FillStyle(color: Color(.black))
-              text.font = "15pt Helvetica"
-              text.alignment = .center
-              text.baseline = .middle
-              canvas.render(fillStyle, text)
-          }          
-      }
+        if title != nil { // include text that is centered on the button
+            var textLocation = returnCenter(rect: rect) + Point(x: 0, y: 5)
+            if centered { // Offset if the button is centered
+                textLocation -= Point(x: rect.size.width / 2, y: rect.size.height / 2)
+            }
+            
+            let text = Text(location: textLocation, text: title!)
+            let fillStyle = FillStyle(color: Color(.black))
+            text.font = "15pt Helvetica"
+            text.alignment = .center
+            text.baseline = .middle
+            canvas.render(fillStyle, text)
+        }          
+    }
 
       func renderButtonRow(to canvas: Canvas, rect: Rect, fillMode: FillMode, radius: Int, centered: Bool = false, titles: [String?] = [nil], columnCount: Int, spacing: Int) {
           var buttonNames = titles

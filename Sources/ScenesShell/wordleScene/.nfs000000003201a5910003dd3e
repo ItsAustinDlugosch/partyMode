@@ -326,7 +326,6 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
             renderButton(to: canvas, rect: deleteButton, fillMode: .fill, radius: canvasScaleFactor / 2)
             buttons.append(deleteButton)
             rect = background
-         
         }
         
         dispatcher.registerEntityMouseClickHandler(handler:self)
@@ -398,7 +397,7 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
                 let whiteFillStyle = FillStyle(color: Color(.white))
                 let winRowRect = returnCenteredRect(rect: Rect(size: Size(width: wordleAnswerBoxSize.width * 5 + spacing * 4, height: wordleAnswerBoxSize.height)), center: midpoint)
                 let victoryPage = Rect(size: canvasSize)
-                canvas.render(FillStyle(color: Color(.thistle)), Rectangle(rect: victoryPage, fillMode: .fill))
+                canvas.render(FillStyle(color: Color(.green)), Rectangle(rect: victoryPage, fillMode: .fill))
                 renderRow(to: canvas, count: 5, spacing: spacing, rect: Rect(topLeft: winRowRect.topLeft, size: wordleAnswerBoxSize), fillMode: .fillAndStroke, strokeStyle: darkgrayStrokeStyle, fillStyle: whiteFillStyle, letters: answer, colors: returnColorSequence(answer: answer, guess: answer))                    
                 if frame / 60 == 1 {
                     animationBool = !animationBool
@@ -410,6 +409,8 @@ class WordleInteraction : RenderableEntity, EntityMouseClickHandler {
                     renderText(to: canvas, location: Point(x: midpoint.x, y: midpoint.y * 3 / 2), text: "YOU WIN!!", font: "80pt Arial")
                 }
                 frame = (frame + 1) % 61
+                print(frame)
+                print(animationBool)
             }
         }
 
